@@ -1,0 +1,15 @@
+/Users/albert/_proj/jinyus/kids-learning-challenges/KlcApis/src/Persistence/bin/Debug/net5.0/Persistence.deps.json
+/Users/albert/_proj/jinyus/kids-learning-challenges/KlcApis/src/Persistence/bin/Debug/net5.0/Persistence.dll
+/Users/albert/_proj/jinyus/kids-learning-challenges/KlcApis/src/Persistence/bin/Debug/net5.0/ref/Persistence.dll
+/Users/albert/_proj/jinyus/kids-learning-challenges/KlcApis/src/Persistence/bin/Debug/net5.0/Persistence.pdb
+/Users/albert/_proj/jinyus/kids-learning-challenges/KlcApis/src/Persistence/bin/Debug/net5.0/Domain.dll
+/Users/albert/_proj/jinyus/kids-learning-challenges/KlcApis/src/Persistence/bin/Debug/net5.0/Domain.pdb
+/Users/albert/_proj/jinyus/kids-learning-challenges/KlcApis/src/Persistence/obj/Debug/net5.0/Persistence.csprojAssemblyReference.cache
+/Users/albert/_proj/jinyus/kids-learning-challenges/KlcApis/src/Persistence/obj/Debug/net5.0/Persistence.GeneratedMSBuildEditorConfig.editorconfig
+/Users/albert/_proj/jinyus/kids-learning-challenges/KlcApis/src/Persistence/obj/Debug/net5.0/Persistence.AssemblyInfoInputs.cache
+/Users/albert/_proj/jinyus/kids-learning-challenges/KlcApis/src/Persistence/obj/Debug/net5.0/Persistence.AssemblyInfo.cs
+/Users/albert/_proj/jinyus/kids-learning-challenges/KlcApis/src/Persistence/obj/Debug/net5.0/Persistence.csproj.CoreCompileInputs.cache
+/Users/albert/_proj/jinyus/kids-learning-challenges/KlcApis/src/Persistence/obj/Debug/net5.0/Persistence.csproj.CopyComplete
+/Users/albert/_proj/jinyus/kids-learning-challenges/KlcApis/src/Persistence/obj/Debug/net5.0/Persistence.dll
+/Users/albert/_proj/jinyus/kids-learning-challenges/KlcApis/src/Persistence/obj/Debug/net5.0/ref/Persistence.dll
+/Users/albert/_proj/jinyus/kids-learning-challenges/KlcApis/src/Persistence/obj/Debug/net5.0/Persistence.pdb

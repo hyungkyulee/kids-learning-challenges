@@ -1,0 +1,12 @@
+/Users/albert/_proj/jinyus/kids-learning-challenges/KlcApis/src/Domain/bin/Debug/net5.0/Domain.deps.json
+/Users/albert/_proj/jinyus/kids-learning-challenges/KlcApis/src/Domain/bin/Debug/net5.0/Domain.dll
+/Users/albert/_proj/jinyus/kids-learning-challenges/KlcApis/src/Domain/bin/Debug/net5.0/ref/Domain.dll
+/Users/albert/_proj/jinyus/kids-learning-challenges/KlcApis/src/Domain/bin/Debug/net5.0/Domain.pdb
+/Users/albert/_proj/jinyus/kids-learning-challenges/KlcApis/src/Domain/obj/Debug/net5.0/Domain.csprojAssemblyReference.cache
+/Users/albert/_proj/jinyus/kids-learning-challenges/KlcApis/src/Domain/obj/Debug/net5.0/Domain.GeneratedMSBuildEditorConfig.editorconfig
+/Users/albert/_proj/jinyus/kids-learning-challenges/KlcApis/src/Domain/obj/Debug/net5.0/Domain.AssemblyInfoInputs.cache
+/Users/albert/_proj/jinyus/kids-learning-challenges/KlcApis/src/Domain/obj/Debug/net5.0/Domain.AssemblyInfo.cs
+/Users/albert/_proj/jinyus/kids-learning-challenges/KlcApis/src/Domain/obj/Debug/net5.0/Domain.csproj.CoreCompileInputs.cache
+/Users/albert/_proj/jinyus/kids-learning-challenges/KlcApis/src/Domain/obj/Debug/net5.0/Domain.dll
+/Users/albert/_proj/jinyus/kids-learning-challenges/KlcApis/src/Domain/obj/Debug/net5.0/ref/Domain.dll
+/Users/albert/_proj/jinyus/kids-learning-challenges/KlcApis/src/Domain/obj/Debug/net5.0/Domain.pdb
