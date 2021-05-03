@@ -72,7 +72,7 @@ src/Persistence/Persistence.csproj
 src/Domain/Domain.csproj
 ```
 
-## Dependency between projects
+#### Dependency between projects
 
 API <- Application <- Persistence <- Domain
                    <- Domain
@@ -90,6 +90,83 @@ Reference `..\Domain\Domain.csproj` added to the project.
 Reference `..\Domain\Domain.csproj` added to the project.
 ```
 
+#### File structure and properties updated on Rider
+![image](https://user-images.githubusercontent.com/59367560/116902889-9d760880-ac33-11eb-834e-77a3e5ceed65.png)
 
+src/API/Properties/launchSettings.json (to remove https on development mode)
+```json
+:
+  "profiles": {
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "API": {
+      "commandName": "Project",
+      "dotnetRunMessages": "true",
+      "launchBrowser": false,
+      "launchUrl": "swagger",
+      "applicationUrl": "http://localhost:5000",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+:
+```
 
+src/API/Startup.cs (comment on https redirection method)
+```c#
+:
+// app.UseHttpsRedirection();
+:
+```
 
+src/API/appsettings.Developement.json (to show more information)
+```json
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft": "Information",
+      "Microsoft.Hosting.Lifetime": "Information"
+    }
+  }
+}
+```
+
+#### Test run
+
+```bash
+➜  API git:(main) ✗ dotnet run
+Building...
+info: Microsoft.Hosting.Lifetime[0]
+      Now listening on: http://localhost:5000
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Development
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: /Users/albert/_proj/jinyus/kids-learning-challenges/KlcApis/src/API
+^Cinfo: Microsoft.Hosting.Lifetime[0]
+      Application is shutting down...
+➜  API git:(main) ✗ dotnet watch run
+watch : Started
+Building...
+info: Microsoft.Hosting.Lifetime[0]
+      Now listening on: http://localhost:5000
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Development
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: /Users/albert/_proj/jinyus/kids-learning-challenges/KlcApis/src/API
+```
+
+#### Swagger - Microsoft API documentation tool
+even though the localhost:5000 is not responding with 404 error, swagger will diplay a test interface for a documentaiton purpose.
+![image](https://user-images.githubusercontent.com/59367560/116905229-9e5c6980-ac36-11eb-8a12-fa2928da11a1.png)
