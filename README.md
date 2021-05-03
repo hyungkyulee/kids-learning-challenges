@@ -169,4 +169,8 @@ info: Microsoft.Hosting.Lifetime[0]
 
 #### Swagger - Microsoft API documentation tool
 even though the localhost:5000 is not responding with 404 error, swagger will diplay a test interface for a documentaiton purpose.
+[Browser]
 ![image](https://user-images.githubusercontent.com/59367560/116905229-9e5c6980-ac36-11eb-8a12-fa2928da11a1.png)
+[Postman]
+![image](https://user-images.githubusercontent.com/59367560/116906944-d5cc1580-ac38-11eb-9696-01efd949be0b.png)
+
