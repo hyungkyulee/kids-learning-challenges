@@ -1,10 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "TZu9xERnd38jyei+aJcTokIl5JfCcQdcD5NP77E/HmMtdSa1yTm7yPcHnB0wjIE/lRxh+H1zCVn3HQLMXIILCQ==",
+  "dgSpecHash": "e1GHkE8sB1/CxDJ4rZxg4TdHsZxl3Xn35Pgh1OQLeGPQatx8hk5tvK6qhxVXss5G/qlsbFGnR0u4mForWjdc8w==",
   "success": true,
   "projectFilePath": "/Users/albert/_proj/jinyus/kids-learning-challenges/KlcApis/src/API/API.csproj",
   "expectedPackageFiles": [
     "/Users/albert/.nuget/packages/humanizer.core/2.8.26/humanizer.core.2.8.26.nupkg.sha512",
+    "/Users/albert/.nuget/packages/mediatr/9.0.0/mediatr.9.0.0.nupkg.sha512",
+    "/Users/albert/.nuget/packages/mediatr.extensions.microsoft.dependencyinjection/9.0.0/mediatr.extensions.microsoft.dependencyinjection.9.0.0.nupkg.sha512",
     "/Users/albert/.nuget/packages/microsoft.csharp/4.7.0/microsoft.csharp.4.7.0.nupkg.sha512",
     "/Users/albert/.nuget/packages/microsoft.data.sqlite.core/5.0.5/microsoft.data.sqlite.core.5.0.5.nupkg.sha512",
     "/Users/albert/.nuget/packages/microsoft.dotnet.platformabstractions/3.1.6/microsoft.dotnet.platformabstractions.3.1.6.nupkg.sha512",
