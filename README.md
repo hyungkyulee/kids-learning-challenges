@@ -1,6 +1,6 @@
 # kids-learning-challenges
 
-## creating the .net projects and references
+## creating the .net projects/references, and Reviewing them on postman
 
 #### Create Solution and WebApi project
 ```bash
@@ -169,4 +169,213 @@ info: Microsoft.Hosting.Lifetime[0]
 
 #### Swagger - Microsoft API documentation tool
 even though the localhost:5000 is not responding with 404 error, swagger will diplay a test interface for a documentaiton purpose.
+[Browser]
 ![image](https://user-images.githubusercontent.com/59367560/116905229-9e5c6980-ac36-11eb-8a12-fa2928da11a1.png)
+[Postman]
+![image](https://user-images.githubusercontent.com/59367560/116906944-d5cc1580-ac38-11eb-9696-01efd949be0b.png)
+
+
+## Adding an entity Framework Db Context
+
+#### Install NuGet Packages
+Microsoft.EntityFrameworkCore.Sqlite onto Persistence project
+
+#### Create DataContext Class (Persistence > DataContext.cs)
+```c#
+namespace Persistence
+{
+    public class DataContext : DbContext
+    {
+        public DataContext(DbContextOptions options) : base(options)
+        {
+        }
+
+        public DbSet<WordGame> WordGames { get; set; }
+    }
+}
+```
+
+#### Remove microsoft default configuration, and use ConnectionString from appsettings
+```c#
+/*
+public Startup(IConfiguration configuration)
+{
+    Configuration = configuration;
+}
+
+public IConfiguration Configuration { get; }
+*/
+
+:
+
+private readonly IConfiguration _config;
+
+public Startup(IConfiguration config)
+{
+    _config = config;
+}
+
+// This method gets called by the runtime. Use this method to add services to the container.
+public void ConfigureServices(IServiceCollection services)
+{
+
+    services.AddControllers();
+    services.AddSwaggerGen(c =>
+    {
+        c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
+    });
+    services.AddDbContext<DataContext>(opt =>
+    {
+        opt.UseSqlite(_config.GetConnectionString("DefaultConnection"));
+    });
+}
+```
+
+appsettings.Development.json
+```json
+  "ConnectionStrings": {
+    "DefaultConnection": "Data source=wordgames.db"
+  }
+```
+
+#### create a migration
+
+```bash
+➜  KlcApis git:(main) ✗ dotnet tool update --global dotnet-ef
+Tool 'dotnet-ef' was successfully updated from version '3.1.2' to version '5.0.5'.
+
+➜  KlcApis git:(main) ✗ dotnet ef -h
+Entity Framework Core .NET Command-line Tools 5.0.5
+
+Usage: dotnet ef [options] [command]
+
+Options:
+  --version        Show version information
+  -h|--help        Show help information
+  -v|--verbose     Show verbose output.
+  --no-color       Don't colorize output.
+  --prefix-output  Prefix output with level.
+
+Commands:
+  database    Commands to manage the database.
+  dbcontext   Commands to manage DbContext types.
+  migrations  Commands to manage migrations.
+
+Use "dotnet ef [command] --help" for more information about a command.
+➜  KlcApis git:(main) ✗ dotnet ef migrations add InitialCreate -p src/Persistence -s src/API 
+Build started...
+Build succeeded.
+Your startup project 'API' doesn't reference Microsoft.EntityFrameworkCore.Design. This package is required for the Entity Framework Core Tools to work. Ensure your startup project is correct, install the package, and try again.
+:
+➜  KlcApis git:(main) ✗ dotnet ef migrations add InitialCreate -p src/Persistence -s src/API
+Build started...
+Build succeeded.
+info: Microsoft.EntityFrameworkCore.Infrastructure[10403]
+      Entity Framework Core 5.0.5 initialized 'DataContext' using provider 'Microsoft.EntityFrameworkCore.Sqlite' with options: None
+Done. To undo this action, use 'ef migrations remove'
+```
+> if dotnet-ef has never installed, please use 'install' than 'update'
+> if migration is failed, install NuGet package of 'Microsoft.EntityFrameworkCore.Design' to API project and try again.
+> after being successful, you can check the migration builder on Persistence > Migrations > xxx_initialCreate.cs to handle an actual Database
+> 
+
+#### Create Database
+
+```bash
+➜  KlcApis git:(main) ✗ dotnet ef database -h
+
+
+Usage: dotnet ef database [options] [command]
+
+Options:
+  -h|--help        Show help information
+  -v|--verbose     Show verbose output.
+  --no-color       Don't colorize output.
+  --prefix-output  Prefix output with level.
+
+Commands:
+  drop    Drops the database.
+  update  Updates the database to a specified migration.
+
+Use "database [command] --help" for more information about a command.
+```
+
+API > Program.cs
+```c#
+:
+public static void Main(string[] args)
+{
+    var host = CreateHostBuilder(args).Build();
+    using var scope = host.Services.CreateScope();
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<DataContext>();
+        context.Database.Migrate();
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occured during migraiton");
+    }
+
+    host.Run();
+}
+:
+```
+
+```bash
+➜  API git:(main) ✗ dotnet watch run
+watch : Started
+Building...
+info: Microsoft.EntityFrameworkCore.Infrastructure[10403]
+      Entity Framework Core 5.0.5 initialized 'DataContext' using provider 'Microsoft.EntityFrameworkCore.Sqlite' with options: None
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (8ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      PRAGMA journal_mode = 'wal';
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE TABLE "__EFMigrationsHistory" (
+          "MigrationId" TEXT NOT NULL CONSTRAINT "PK___EFMigrationsHistory" PRIMARY KEY,
+          "ProductVersion" TEXT NOT NULL
+      );
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT COUNT(*) FROM "sqlite_master" WHERE "name" = '__EFMigrationsHistory' AND "type" = 'table';
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT "MigrationId", "ProductVersion"
+      FROM "__EFMigrationsHistory"
+      ORDER BY "MigrationId";
+info: Microsoft.EntityFrameworkCore.Migrations[20402]
+      Applying migration '20210504185813_InitialCreate'.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE TABLE "WordGames" (
+          "Id" TEXT NOT NULL CONSTRAINT "PK_WordGames" PRIMARY KEY,
+          "Question" TEXT NULL,
+          "Date" TEXT NOT NULL,
+          "Description" TEXT NULL,
+          "Category" TEXT NULL,
+          "Answer" TEXT NULL,
+          "WrongAnswer1" TEXT NULL,
+          "WrongAnswer2" TEXT NULL,
+          "WrongAnswer3" TEXT NULL,
+          "WrongAnswer4" TEXT NULL,
+          "WrongAnswer5" TEXT NULL
+      );
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      INSERT INTO "__EFMigrationsHistory" ("MigrationId", "ProductVersion")
+      VALUES ('20210504185813_InitialCreate', '5.0.5');
+info: Microsoft.Hosting.Lifetime[0]
+      Now listening on: http://localhost:5000
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Development
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: /Users/albert/_proj/jinyus/kids-learning-challenges/KlcApis/src/API
+
+```
+> check database created via Database window
