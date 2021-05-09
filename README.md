@@ -498,6 +498,20 @@ namespace API.Controllers
 Result from postman
 ![image](https://user-images.githubusercontent.com/59367560/117578038-59c44880-b0e4-11eb-8ce0-6ca98c2c46e4.png)
 
+### CORS
+Add Cors policy in the DependencyInjection
+API > Startup.cs
+```c#
+:
+services.AddCors(opt =>
+{
+    opt.AddPolicy("CorsPolicy", policy =>
+    {
+        policy.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:3000");
+    });
+});
+:
+```
 
 ## Clean Architecture
 by Uncle Bob (2012)
@@ -516,15 +530,6 @@ Presenters: frontend applications
 #### Flow of control
 > HttpRequest (API: 'Controller') -> Application Layer (User case Interactor) -> API: 'Presenter' -> HttpRespond
 
-#### Mediator
-API Controller -> Mediator.Send() -> Mediator Handler -> Object out -> API Controller
-        (Query/Command)                                       (Http response)
-        
-1) a request comes to our API controller
-2) send method via the media
-3) handle argues the use-case in a related handler (process the logic)
-4) return object with Http response
-
 ### CQRS 
 stands for 'Command Query Response Seperation'
 CQRS might have more benefits on multi DB like Read/Write seperated Database.
@@ -539,3 +544,99 @@ CQRS might have more benefits on multi DB like Read/Write seperated Database.
 - donot modify state
 - return a value
 
+### Mediator
+#### Concept overview
+API Controller -> Mediator.Send() -> Mediator Handler -> Object out -> API Controller
+        (Query/Command)                                       (Http response)
+        
+1) a request comes to our API controller
+2) send method via the media
+3) handle argues the use-case in a related handler (process the logic)
+4) return object with Http response
+
+#### implementation
+1) Install NuGet package: MediatR.Extensions.Microsoft.DependencyInjection to 'Application' layer
+2) create handler with IReqeust/I mediatR interface
+3) change API controller's direct access with db context to mediator.send() of IMediator
+  ```services.AddMediatR(typeof(List.Handler).Assembly);
+  ```c#
+  ublic class WordGamesController : BaseApiController
+  {
+      private readonly IMediator _mediator;
+
+      public WordGamesController(IMediator mediator)
+      {
+          _mediator = mediator;
+      }
+
+      [HttpGet]
+      public async Task<ActionResult<List<WordGame>>> GetWordGames()
+      {
+          // return await _context.WordGames.ToListAsync();
+          return await _mediator.Send(new List.Query());
+      }
+      :
+      :
+  ```
+> in order to make mediator available in any derived classes (applications) from the base class commonly, it can be declared as protected to use in a derived class.
+> IMediator is a service within HttpContext
+> '??=' is a null coalescing assignment operator (if it's null, assign ...)
+
+API > Controllers > BaseApiController.cs
+```c#
+public class BaseApiController : ControllerBase
+{
+    private IMediator _mediator;
+
+    protected IMediator Mediator => _mediator ??= HttpContext
+        .RequestServices
+        .GetService<IMediator>();
+}
+```
+
+#### Handler examples
+Application > WordGames > List.cs
+```c#
+public class List
+{
+    public class Query : IRequest<List<WordGame>> {}
+
+    public class Handler : IRequestHandler<Query, List<WordGame>>
+    {
+        private readonly DataContext _context;
+
+        public Handler(DataContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<List<WordGame>> Handle(Query request, CancellationToken cancellationToken)
+        {
+            return await _context.WordGames.ToListAsync();
+        }
+    }
+}
+```
+
+Application > WordGames > Details.cs
+```c#
+public class Query : IRequest<WordGame>
+{
+    public Guid Id;
+}
+
+public class Handler : IRequestHandler<Query, WordGame>
+{
+    private readonly DataContext _dataContext;
+
+    public Handler(DataContext dataContext)
+    {
+        _dataContext = dataContext;
+    }
+
+    public async Task<WordGame> Handle(Query request, CancellationToken cancellationToken)
+    {
+        return await _dataContext.WordGames.FindAsync(request.Id);
+    }
+}
+```
