@@ -378,4 +378,125 @@ info: Microsoft.Hosting.Lifetime[0]
       Content root path: /Users/albert/_proj/jinyus/kids-learning-challenges/KlcApis/src/API
 
 ```
-> check database created via Database window
+> check database created via Database window (database file will be shown after more than one item is inserted to the table)
+
+Test Seed items onto the table, and inject it via program start
+example of Seed items
+Persistence > Seed.cs
+```c#
+namespace Persistence
+{
+    public class Seed
+    {
+        public static async Task SeedData(DataContext context)
+        {
+            if (context.WordGames.Any()) return;
+
+            var testWordGames = new List<WordGame>
+            {
+                new WordGame
+                {
+                    Question = "Wrath",
+                    Date = DateTime.Now,
+                    Description = "do it",
+                    Category = "Synonyms",
+                    Answer = "anger",
+                    WrongAnswer1 = "crime",
+                    WrongAnswer2 = "knot",
+                    WrongAnswer3 = "smoke",
+                    WrongAnswer4 = "happiness",
+                    WrongAnswer5 = "sadness",
+                },
+                new WordGame
+                {
+                  :
+                }
+                  :
+                  :
+                
+            };
+
+            await context.WordGames.AddRangeAsync(testWordGames);
+            await context.SaveChangesAsync();
+        }
+    }
+}
+```
+
+Inject by program start
+API > Program.cs
+```c#
+:
+public static async Task Main(string[] args)
+{
+    var host = CreateHostBuilder(args).Build();
+    using var scope = host.Services.CreateScope();
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<DataContext>();
+        await context.Database.MigrateAsync();
+        await Seed.SeedData(context);
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occured during migraiton");
+    }
+
+    await host.RunAsync();
+}
+:
+```
+![image](https://user-images.githubusercontent.com/59367560/117577843-6a27f380-b0e3-11eb-810e-02d281c342eb.png)
+
+API endpoint route
+API > Controllers > BaseApiController.cs
+```c#
+namespace API.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class BaseApiController : ControllerBase
+    {
+        
+    }
+}
+```
+
+API > Controllers > WordGamesControllers.cs
+```c#
+namespace API.Controllers
+{
+    public class WordGamesController : BaseApiController
+    {
+        private readonly DataContext _context;
+
+        public WordGamesController(DataContext context)
+        {
+            _context = context;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<List<WordGame>>> GetWordGames()
+        {
+            return await _context.WordGames.ToListAsync();
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<WordGame>> GetWordGame(Guid id)
+        {
+            return await _context.WordGames.FindAsync(id);
+        }
+    }
+}
+```
+> annotation 'ApiController' is connecting the api controller with endpoint
+> annotation 'Route' will be describing the path right after hostname: e.g. http://localhost:5000/api/wordgames
+>  * wordgames is parsed from 'WordGamesController' Class Name
+
+Result from postman
+![image](https://user-images.githubusercontent.com/59367560/117578038-59c44880-b0e4-11eb-8ce0-6ca98c2c46e4.png)
+
+
+
