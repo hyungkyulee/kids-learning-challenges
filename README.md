@@ -499,4 +499,43 @@ Result from postman
 ![image](https://user-images.githubusercontent.com/59367560/117578038-59c44880-b0e4-11eb-8ce0-6ca98c2c46e4.png)
 
 
+## Clean Architecture
+by Uncle Bob (2012)
+
+#### Entities : Domain layer, Single Business Rule
+Use Cases : Application Buisness Rules (e.g. Create, Edit, List, etc), Independent from frontend application
+Controllers : interface between frontend and business logic
+Presenters: frontend applications
+
+#### Characteristcs
+- independent from frameworks
+- testable
+- independent from the interface
+- independent from the database
+
+#### Flow of control
+> HttpRequest (API: 'Controller') -> Application Layer (User case Interactor) -> API: 'Presenter' -> HttpRespond
+
+#### Mediator
+API Controller -> Mediator.Send() -> Mediator Handler -> Object out -> API Controller
+        (Query/Command)                                       (Http response)
+        
+1) a request comes to our API controller
+2) send method via the media
+3) handle argues the use-case in a related handler (process the logic)
+4) return object with Http response
+
+### CQRS 
+stands for 'Command Query Response Seperation'
+CQRS might have more benefits on multi DB like Read/Write seperated Database.
+
+#### Command
+- do something
+- modify satate
+- should not return a value
+
+#### Query
+- answer a question
+- donot modify state
+- return a value
 
