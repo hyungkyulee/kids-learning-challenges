@@ -19,7 +19,7 @@ namespace API.Controllers
         // {
         //     _mediator = mediator;
         // }
-
+        
         [HttpGet]
         public async Task<ActionResult<List<WordGame>>> GetWordGames()
         {
@@ -36,6 +36,15 @@ namespace API.Controllers
             {
                 Id = id
             });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateWordGame(WordGame wordGame)
+        {
+            return Ok(await Mediator.Send(new Create.Command
+            {
+                WordGame = wordGame
+            }));
         }
     }
 }
